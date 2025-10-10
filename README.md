@@ -12,7 +12,7 @@
 
 - `develop`
 
-
+---
 
 # CASO DE ESTUDIO – MÁSTER CHEF CELEBRITY
 
@@ -79,12 +79,12 @@ https://account.mongodb.com/account/security/mfa/setup?redirectUri=https%3A%2F%2
 2. Entre a  Clusters y use la base de datos de Fintech ya que es la gratuita que tenia
 
 3.  Le di a connect y luego en drivers allí seleccione esto:
-  - Driver: Java  Version: La última disponible en este caso la 5.1 
-  - Y me salio la URI: `mongodb+srv://<db_username>:<db_password>@fintech.lovfhfs.mongodb.net/?retryWrites=true&w=majority&appName=Fintech`
+    - Driver: Java  - Version: La última disponible en este caso la 5.1 
+    - Y me salio la URI: `mongodb+srv://<db_username>:<db_password>@fintech.lovfhfs.mongodb.net/?retryWrites=true&w=majority&appName=Fintech`
 
 4. Despues de darle a done fui a Security/Database Access 
-  - Mi nombre de usuario: RobinsonPortela
-  - Y de contraseña: F0dqJg3JHaJWIAf2
+    - Mi nombre de usuario: RobinsonPortela
+    - Y de contraseña: F0dqJg3JHaJWIAf2
 
 5. Luego defini en Security/Network Access mi ip y no escogi la 0.0.0.0/0 ya que solo voy a trabajar yo
 6. Me fui a MongoDB Compass y conecte la base de no relacional usando la URI 
