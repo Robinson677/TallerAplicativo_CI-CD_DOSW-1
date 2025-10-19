@@ -15,28 +15,30 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>TallerAplicativo_CI-CD_DOSW-1</name>
 	<description>CASO DE ESTUDIO – MÁSTER CHEF CELEBRITY</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
         <jacoco.version>0.8.13</jacoco.version>
 
         <sonar.projectKey>library</sonar.projectKey>
         <sonar.projectName>library</sonar.projectName>
         <sonar.host.url>http://localhost:9003</sonar.host.url>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.coverage.exclusions>src//configurators/**</sonar.coverage.exclusions>
+
+        <sonar.coverage.exclusions>
+            **/aop/**,
+            **/models/**,
+            **/dtos/**,
+            **/enums/**,
+            **/specifications/**,
+            **/mappers/**,
+            **/configs/**,
+            **/security/**,
+            **/util/**,
+            **/PAWPATROL_BACK/**,
+            **/ClassApplication.class
+        </sonar.coverage.exclusions>
+
 
         <jacoco.exclusions.pattern>
             **/aop/**,
@@ -47,6 +49,8 @@
             **/mappers/**,
             **/configs/**,
             **/security/**,
+            **/util/**,
+            **/PAWPATROL_BACK/**,
             **/ClassApplication.class
         </jacoco.exclusions.pattern>
     </properties>
@@ -68,6 +72,12 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
 
         <!-- Lombok -->
         <dependency>
@@ -96,10 +106,14 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.6.0</version>
+            <version>2.7.0</version>
         </dependency>
 
         <!-- JWT -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -130,11 +144,22 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.12.2</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -226,12 +251,12 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.00</minimum>
+                                            <minimum>0.70</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.00</minimum>
+                                            <minimum>0.68</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

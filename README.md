@@ -98,4 +98,16 @@ https://account.mongodb.com/account/security/mfa/setup?redirectUri=https%3A%2F%2
 
 ---
 
+## Configuración Swagger:
 
+1. Añadimo esta dependencia en el pom:
+
+![alt text](docs/imagenes/swagger.png)
+
+2. Se agrego una clase de SecurityConfig para abrir automatcamente el swagger ui
+3. Tambien se agrego  SwaggerConfig para especificar la appi en swagger
+
+![alt text](docs/imagenes/swa.png)
+
+
+---
