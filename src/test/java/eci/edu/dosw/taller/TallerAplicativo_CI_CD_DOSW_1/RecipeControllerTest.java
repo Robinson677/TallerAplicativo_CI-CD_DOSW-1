@@ -150,4 +150,93 @@ class RecipeControllerTest {
         assertEquals(404, ex.getStatusCode().value());
         assertTrue(ex.getMessage().contains("Receta") || ex.getReason().contains("999"));
     }
+
+    @Test
+    void shouldUpdateRecipe() {
+        CreateRecipeDTO dto = new CreateRecipeDTO();
+        dto.setTitle("Tortilla Mejorada");
+        dto.setIngredients(List.of("huevo", "sal"));
+        dto.setSteps(List.of("mezclar", "freir"));
+        dto.setChefName("Robinson");
+        RecipeDTO updated = new RecipeDTO();
+        updated.setConsecutive(1);
+        updated.setTitle("Tortilla Mejorada");
+        when(service.update(eq(1), any(CreateRecipeDTO.class))).thenReturn(updated);
+        RecipeDTO result = controller.update(1, dto);
+
+        assertNotNull(result);
+        assertEquals(1, result.getConsecutive());
+        assertEquals("Tortilla Mejorada", result.getTitle());
+        verify(service, times(1)).update(eq(1), any(CreateRecipeDTO.class));
+    }
+
+    @Test
+    void shouldGetParticipantsRecipesController() {
+        RecipeDTO r = new RecipeDTO();
+        r.setConsecutive(10);
+        r.setTitle("Plato participante Martin");
+        r.setChefRole(ChefRole.PARTICIPANT);
+        when(service.findByChefRole(ChefRole.PARTICIPANT)).thenReturn(List.of(r));
+        List<RecipeDTO> res = controller.getParticipantsRecipes();
+
+        assertNotNull(res);
+        assertEquals(1, res.size());
+        assertEquals(ChefRole.PARTICIPANT, res.get(0).getChefRole());
+    }
+
+    @Test
+    void shouldGetViewersRecipesController() {
+        RecipeDTO r = new RecipeDTO();
+        r.setConsecutive(11);
+        r.setTitle("Plato televidente ELIF");
+        r.setChefRole(ChefRole.VIEWER);
+        when(service.findByChefRole(ChefRole.VIEWER)).thenReturn(List.of(r));
+        List<RecipeDTO> res = controller.getViewersRecipes();
+
+        assertNotNull(res);
+        assertEquals(1, res.size());
+        assertEquals(ChefRole.VIEWER, res.get(0).getChefRole());
+    }
+
+    @Test
+    void shouldGetChefsRecipesController() {
+        RecipeDTO r = new RecipeDTO();
+        r.setConsecutive(12);
+        r.setTitle("Plato chef Linguini");
+        r.setChefRole(ChefRole.CHEF);
+        when(service.findByChefRole(ChefRole.CHEF)).thenReturn(List.of(r));
+        List<RecipeDTO> res = controller.getChefsRecipes();
+
+        assertNotNull(res);
+        assertEquals(1, res.size());
+        assertEquals(ChefRole.CHEF, res.get(0).getChefRole());
+    }
+
+    @Test
+    void shouldGetBySeasonController() {
+        RecipeDTO r = new RecipeDTO();
+        r.setConsecutive(20);
+        r.setTitle("Plato temporada 3");
+        r.setSeason(3);
+        when(service.findBySeason(3)).thenReturn(List.of(r));
+        List<RecipeDTO> res = controller.getBySeason(3);
+
+        assertNotNull(res);
+        assertEquals(1, res.size());
+        assertEquals(Integer.valueOf(3), res.get(0).getSeason());
+    }
+
+    @Test
+    void shouldSearchByIngredientController() {
+        RecipeDTO r = new RecipeDTO();
+        r.setConsecutive(30);
+        r.setTitle("Plato con maiz");
+        when(service.findByIngredient("maiz")).thenReturn(List.of(r));
+        List<RecipeDTO> res = controller.searchByIngredient("maiz");
+
+        assertNotNull(res);
+        assertEquals(1, res.size());
+        assertEquals(30, res.get(0).getConsecutive());
+    }
+
 }

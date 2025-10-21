@@ -1,8 +1,8 @@
 package eci.edu.dosw.taller.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eci.edu.dosw.taller.enums.ChefRole;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -24,11 +24,8 @@ public class CreateRecipeDTO {
     @NotBlank
     private String chefName;
     @Schema
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ChefRole chefRole;
     @Schema
     private Integer season;
-    @AssertTrue
-    public boolean isSeasonValid() {
-        return chefRole != null && chefRole != eci.edu.dosw.taller.enums.ChefRole.PARTICIPANT || season != null;
-    }
 }

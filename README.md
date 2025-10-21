@@ -69,6 +69,8 @@ $env:SONAR_TOKEN="squ_49d8276d8344f3e99f6e8687fc2b6191abbfe6a2"
 
 ![alt text](docs/imagenes/sonar.png)
 
+http://localhost:9003/projects
+
 ---
 
 ## Configuración mongo:
@@ -109,5 +111,24 @@ https://account.mongodb.com/account/security/mfa/setup?redirectUri=https%3A%2F%2
 
 ![alt text](docs/imagenes/swa.png)
 
+
+---
+
+## PRUEBAS DE SWAGGER: 
+
+[Ver Pruebas en videos de Swagger en (PDF)](docs/pdf/pruebasEndpointsRecipe.pdf)
+
+---
+
+## PRUEBAS SonarQube:
+
+
+**Compilación de SonarQube:**
+
+![alt text](docs/imagenes/sonar2.png)
+
+**Validación de que pase el SonarQube:**
+
+![alt text](docs/imagenes/sonar3.png)
 
 ---

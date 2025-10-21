@@ -1,4 +1,4 @@
-package eci.edu.dosw.taller.services;
+package eci.edu.dosw.taller.util;
 
 import eci.edu.dosw.taller.models.DatabaseSequence;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
@@ -32,7 +32,9 @@ public class SequenceGeneratorService {
                 DatabaseSequence.class
         );
         if (Objects.isNull(counter)) {
-            throw new RuntimeException("No se pudo generar la secuencia para: " + seqName);
+            throw new AppErrors.BadRequest(
+                    String.format("No se pudo generar la secuencia para: %s", seqName)
+            );
         }
         return (int) counter.getSeq();
     }

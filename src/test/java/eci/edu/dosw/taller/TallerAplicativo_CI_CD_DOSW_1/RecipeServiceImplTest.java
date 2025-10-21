@@ -7,7 +7,7 @@ import eci.edu.dosw.taller.mappers.RecipeMapper;
 import eci.edu.dosw.taller.models.Chef;
 import eci.edu.dosw.taller.models.Recipe;
 import eci.edu.dosw.taller.repositories.RecipeRepository;
-import eci.edu.dosw.taller.services.SequenceGeneratorService;
+import eci.edu.dosw.taller.util.SequenceGeneratorService;
 import eci.edu.dosw.taller.services.impl.RecipeServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -271,4 +271,181 @@ class RecipeServiceImplTest {
 
         assertEquals(404, ex.getStatusCode().value());
     }
+
+
+    @Test
+    void shouldReturnAllRecipes() {
+        Recipe recipe1 = Recipe.builder()
+                .consecutive(1)
+                .title("Ratatouille")
+                .chef(new Chef("Remy", ChefRole.CHEF))
+                .build();
+
+        Recipe recipe2 = Recipe.builder()
+                .consecutive(2)
+                .title("Soufflé")
+                .chef(new Chef("Colette", ChefRole.CHEF))
+                .build();
+        RecipeDTO dto1 = new RecipeDTO();
+        dto1.setConsecutive(1);
+        dto1.setTitle("Ratatouille");
+        dto1.setChefName("Remy");
+        RecipeDTO dto2 = new RecipeDTO();
+        dto2.setConsecutive(2);
+        dto2.setTitle("Soufflé");
+        dto2.setChefName("Colette");
+        when(repository.findAll()).thenReturn(List.of(recipe1, recipe2));
+        when(recipeMapper.toDTO(recipe1)).thenReturn(dto1);
+        when(recipeMapper.toDTO(recipe2)).thenReturn(dto2);
+        List<RecipeDTO> result = service.findAll();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("Ratatouille", result.get(0).getTitle());
+        assertEquals("Soufflé", result.get(1).getTitle());
+    }
+
+
+    @Test
+    void shouldUpdateRecipeSuccessfully() {
+        int consecutive = 1;
+        Recipe existing = Recipe.builder()
+                .id("id-1")
+                .consecutive(consecutive)
+                .title("Tortilla")
+                .ingredients(List.of("huevo", "sal"))
+                .steps(List.of("mezclar", "freir"))
+                .chef(new Chef("Chef Local", ChefRole.CHEF))
+                .season(null)
+                .createdAt(Instant.now().minusSeconds(60))
+                .updatedAt(Instant.now().minusSeconds(60))
+                .build();
+        CreateRecipeDTO dto = new CreateRecipeDTO();
+        dto.setTitle("Tortilla Mejorada");
+        dto.setIngredients(List.of("huevo", "sal", "papa"));
+        dto.setSteps(List.of("pelar", "freir"));
+        dto.setChefName("Chef Nuevo");
+        dto.setChefRole(ChefRole.CHEF);
+        dto.setSeason(null);
+        RecipeDTO outDto = new RecipeDTO();
+        outDto.setConsecutive(consecutive);
+        outDto.setTitle(dto.getTitle());
+        outDto.setChefName(dto.getChefName());
+        outDto.setChefRole(dto.getChefRole());
+        outDto.setIngredients(dto.getIngredients());
+        outDto.setSteps(dto.getSteps());
+        outDto.setUpdatedAt(Instant.now());
+        when(repository.findByConsecutive(consecutive)).thenReturn(Optional.of(existing));
+        when(repository.save(any(Recipe.class))).thenAnswer(inv -> inv.getArgument(0)); // devuelve la entidad guardada
+        when(recipeMapper.toDTO(any(Recipe.class))).thenReturn(outDto);
+        RecipeDTO result = service.update(consecutive, dto);
+
+        assertNotNull(result);
+        assertEquals(consecutive, result.getConsecutive());
+        assertEquals("Tortilla Mejorada", result.getTitle());
+        assertEquals("Chef Nuevo", result.getChefName());
+        ArgumentCaptor<Recipe> captor = ArgumentCaptor.forClass(Recipe.class);
+        verify(repository, times(1)).save(captor.capture());
+        Recipe saved = captor.getValue();
+        assertEquals("Tortilla Mejorada", saved.getTitle());
+        assertEquals(dto.getIngredients(), saved.getIngredients());
+        assertEquals(dto.getSteps(), saved.getSteps());
+        assertNotNull(saved.getUpdatedAt());
+        assertEquals("Chef Nuevo", saved.getChef().getName());
+        assertEquals(ChefRole.CHEF, saved.getChef().getRole());
+    }
+
+    @Test
+    void shouldThrowNotFoundWhenUpdatingMissingRecipe() {
+        int consecutive = 99;
+        CreateRecipeDTO dto = new CreateRecipeDTO();
+        dto.setTitle("No existe");
+        when(repository.findByConsecutive(consecutive)).thenReturn(Optional.empty());
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> service.update(consecutive, dto));
+
+        assertEquals(404, ex.getStatusCode().value());
+        assertTrue(ex.getReason().contains(String.valueOf(consecutive)) || ex.getMessage().contains(String.valueOf(consecutive)));
+    }
+
+    @Test
+    void shouldNotFindByChef() {
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> service.findByChefRole(null));
+        assertEquals(400, ex.getStatusCode().value());
+    }
+
+    @Test
+    void shouldFindByChefRole() {
+        Recipe r = Recipe.builder()
+                .consecutive(10)
+                .title("Plato de prueba")
+                .chef(new Chef("Chef Local", ChefRole.CHEF))
+                .build();
+
+        RecipeDTO dto = new RecipeDTO();
+        dto.setConsecutive(10);
+        dto.setTitle("Plato de prueba");
+        dto.setChefRole(ChefRole.CHEF);
+        dto.setChefName("Chef Local");
+
+        when(repository.findByChefRole(ChefRole.CHEF)).thenReturn(List.of(r));
+        when(recipeMapper.toDTOList(anyList())).thenReturn(List.of(dto));
+
+        List<RecipeDTO> res = service.findByChefRole(ChefRole.CHEF);
+
+        assertNotNull(res);
+        assertEquals(1, res.size());
+        assertEquals(ChefRole.CHEF, res.get(0).getChefRole());
+        verify(repository, times(1)).findByChefRole(ChefRole.CHEF);
+        verify(recipeMapper, times(1)).toDTOList(anyList());
+    }
+
+    @Test
+    void shouldNotFindBySeason() {
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> service.findBySeason(null));
+        assertEquals(400, ex.getStatusCode().value());
+    }
+
+    @Test
+    void shouldFindBySeasonDto() {
+        Recipe r = Recipe.builder().consecutive(20).season(2).title("Plato temporada 2").build();
+        RecipeDTO dto = new RecipeDTO();
+        dto.setConsecutive(20);
+        dto.setSeason(2);
+        dto.setTitle("Plato temporada 2");
+        when(repository.findBySeason(2)).thenReturn(List.of(r));
+        when(recipeMapper.toDTOList(anyList())).thenReturn(List.of(dto));
+        List<RecipeDTO> res = service.findBySeason(2);
+
+        assertNotNull(res);
+        assertEquals(1, res.size());
+        assertEquals(Integer.valueOf(2), res.get(0).getSeason());
+    }
+
+    @Test
+    void shouldNotFindByIngredient() {
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> service.findByIngredient(""));
+
+        assertEquals(400, ex.getStatusCode().value());
+    }
+
+    @Test
+    void shouldFindByIngredient() {
+        Recipe r = Recipe.builder().consecutive(30).title("Plato con maiz").ingredients(List.of("maiz", "sal")).build();
+        RecipeDTO dto = new RecipeDTO();
+        dto.setConsecutive(30);
+        dto.setTitle("Plato con maiz");
+        when(repository.findByIngredients("maiz")).thenReturn(List.of(r));
+        when(recipeMapper.toDTOList(anyList())).thenReturn(List.of(dto));
+        List<RecipeDTO> res = service.findByIngredient("maiz");
+
+        assertNotNull(res);
+        assertEquals(1, res.size());
+        assertEquals(30, res.get(0).getConsecutive());
+
+    }
+
 }

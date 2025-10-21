@@ -8,7 +8,7 @@ import eci.edu.dosw.taller.models.ChefFactory;
 import eci.edu.dosw.taller.models.Recipe;
 import eci.edu.dosw.taller.repositories.RecipeRepository;
 import eci.edu.dosw.taller.services.RecipeService;
-import eci.edu.dosw.taller.services.SequenceGeneratorService;
+import eci.edu.dosw.taller.util.SequenceGeneratorService;
 import eci.edu.dosw.taller.util.AppErrors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +36,18 @@ public class RecipeServiceImpl implements RecipeService {
         if (dto.getTitle() == null || dto.getTitle().isBlank()) {
             String message = AppErrors.titleRequiredForRoleOrDefault(dto.getChefRole());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+        }
+
+        ChefRole role = dto.getChefRole();
+        if (role == null) {
+            dto.setSeason(null);
+        } else if (role == ChefRole.PARTICIPANT) {
+            if (dto.getSeason() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        AppErrors.Messages.RECIPE_SEASON_REQUIRED_FOR_PARTICIPANT);
+            }
+        } else {
+            dto.setSeason(null);
         }
 
         int consecutive = sequenceGenerator.getNextSequence("recipes_sequence");
@@ -86,7 +98,7 @@ public class RecipeServiceImpl implements RecipeService {
     public List<RecipeDTO> findAll() {
         return repository.findAll().stream()
                 .map(recipeMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -128,5 +140,31 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe saved = repository.save(existing);
         return recipeMapper.toDTO(saved);
     }
+
+
+    @Override
+    public List<RecipeDTO> findByChefRole(ChefRole role) {
+        if (role == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AppErrors.Messages.ROLE_REQUIRED);
+        }
+        return recipeMapper.toDTOList(repository.findByChefRole(role));
+    }
+
+    @Override
+    public List<RecipeDTO> findBySeason(Integer season) {
+        if (season == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AppErrors.Messages.SEASON_REQUIRED);
+        }
+        return recipeMapper.toDTOList(repository.findBySeason(season));
+    }
+
+    @Override
+    public List<RecipeDTO> findByIngredient(String ingredient) {
+        if (ingredient == null || ingredient.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AppErrors.Messages.INGREDIENT_REQUIRED);
+        }
+        return recipeMapper.toDTOList(repository.findByIngredients(ingredient));
+    }
+
 
 }

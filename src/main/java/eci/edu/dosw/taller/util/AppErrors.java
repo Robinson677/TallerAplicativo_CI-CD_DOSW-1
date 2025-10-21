@@ -1,17 +1,17 @@
 package eci.edu.dosw.taller.util;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.util.Objects;
 
 /**
  * Clase central que agrupa busquedas y validaciones para lanzar execpciones
  */
-@Component
-@RequiredArgsConstructor
 
 public final class AppErrors {
+
+    private AppErrors() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
 
     public static final class Messages {
         private Messages() {}
@@ -22,6 +22,9 @@ public final class AppErrors {
         public static final String RECIPE_STEPS_REQUIRED = "El campo steps es obligatorio";
         public static final String RECIPE_SEASON_REQUIRED_FOR_PARTICIPANT = "season es obligatorio para chefRole PARTICIPANT";
         public static final String INVALID_REQUEST_BODY = "Request body inválido o nulo";
+        public static final String ROLE_REQUIRED = "El rol no puede ser nulo";
+        public static final String SEASON_REQUIRED = "season es requerido";
+        public static final String INGREDIENT_REQUIRED = "ingredient es requerido";
     }
 
 

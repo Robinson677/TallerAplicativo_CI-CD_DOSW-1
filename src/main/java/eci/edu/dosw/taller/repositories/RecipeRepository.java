@@ -13,6 +13,7 @@ import java.util.Optional;
  */
 public interface RecipeRepository extends MongoRepository<Recipe, String> {
     Optional<Recipe> findByConsecutive(Integer consecutive);
+    @Query("{ 'chef.role': ?0 }")
     List<Recipe> findByChefRole(ChefRole role);
     List<Recipe> findBySeason(Integer season);
     @Query("{ 'ingredients': { $regex: ?0, $options: 'i' } }")

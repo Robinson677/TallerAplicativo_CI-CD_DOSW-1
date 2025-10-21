@@ -17,4 +17,7 @@ public interface RecipeService {
     RecipeDTO findByConsecutive(Integer consecutive);
     void delete(Integer consecutive);
     RecipeDTO update(Integer consecutive, CreateRecipeDTO dto);
+    List<RecipeDTO> findByChefRole(eci.edu.dosw.taller.enums.ChefRole role);
+    List<RecipeDTO> findBySeason(Integer season);
+    List<RecipeDTO> findByIngredient(String ingredient);
 }

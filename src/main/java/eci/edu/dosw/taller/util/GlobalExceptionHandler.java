@@ -58,14 +58,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .stream()
                 .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
                 .toList();
-
-        String path = "";
+        String path = request.getDescription(false);
         if (request instanceof ServletWebRequest servletWebRequest) {
             try {
-                path = servletWebRequest.getRequest().getRequestURI();
-            } catch (Exception ignored) { }
-        } else {
-            path = request.getDescription(false);
+                String uri = servletWebRequest.getRequest().getRequestURI();
+                if (uri != null && !uri.isBlank()) {
+                    path = uri;
+                }
+            } catch (Exception e) {
+                LOG.debug("No se pudo obtener request URI desde ServletWebRequest: {}", e.getMessage(), e);
+            }
         }
 
         ErrorResponse body = new ErrorResponse(
@@ -79,6 +81,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).body(body);
     }
+
 
 
     @ExceptionHandler(ConstraintViolationException.class)
