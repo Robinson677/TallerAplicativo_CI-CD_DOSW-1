@@ -116,13 +116,6 @@ https://account.mongodb.com/account/security/mfa/setup?redirectUri=https%3A%2F%2
 
 ![alt text](docs/imagenes/swa.png)
 
-
----
-
-## PRUEBAS DE SWAGGER: 
-
-[Ver Pruebas en videos de Swagger en (PDF)](docs/pdf/pruebasEndpointsRecipe.pdf)
-
 ---
 
 ## PRUEBAS SonarQube:
@@ -135,6 +128,15 @@ https://account.mongodb.com/account/security/mfa/setup?redirectUri=https%3A%2F%2
 **Validación de que pase el SonarQube:**
 
 ![alt text](docs/imagenes/sonar3.png)
+
+
+---
+
+## PRUEBAS DE SWAGGER:
+
+[Ver Pruebas en videos de Swagger en (PDF)](docs/pdf/pruebasEndpointsRecipe.pdf)
+
+---
 
 ---
 
