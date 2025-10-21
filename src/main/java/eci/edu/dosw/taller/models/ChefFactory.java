@@ -3,7 +3,7 @@ package eci.edu.dosw.taller.models;
 import eci.edu.dosw.taller.dtos.CreateRecipeDTO;
 
 /**
- * Fabrica los tipos de chef
+ * Fabrica los tipos de chefs
  */
 public final class ChefFactory {
 
