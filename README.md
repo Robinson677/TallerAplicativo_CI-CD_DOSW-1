@@ -22,6 +22,11 @@ y aprender las recetas a lo largo de las temporadas ya realizadas.
 
 Los clientes también deben poder interactuar en el sitio de manera que puedan publicar sus recetas. 
 
+---
+
+## Enlaces
+- Repo: https://github.com/Robinson677/TallerAplicativo_CI-CD_DOSW-1/blob/main/README.md
+- Swagger UI: https://mi-master-cheff-api-gwcefggbgpgua6hd.brazilsouth-01.azurewebsites.net/swagger-ui/index.html
 
 ---
 
@@ -130,5 +135,11 @@ https://account.mongodb.com/account/security/mfa/setup?redirectUri=https%3A%2F%2
 **Validación de que pase el SonarQube:**
 
 ![alt text](docs/imagenes/sonar3.png)
+
+---
+
+## Configuración de Azure y GitActions CI/CD
+
+[Ver Configuración en (PDF)](docs/pdf/configuracionAzure.pdf)
 
 ---
