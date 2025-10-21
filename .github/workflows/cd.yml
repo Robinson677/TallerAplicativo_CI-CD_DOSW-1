@@ -38,6 +38,5 @@ jobs:
           package: target/*.jar
 
       - name: Show deployed URL
-        run:
-          echo " App deployed at: https://${{ secrets.AZURE_WEBAPP_NAME }}.azurewebsites.net/swagger-ui/index.html"
-
+        run: |
+          echo "App deployed at: https://${{ secrets.AZURE_WEBAPP_NAME }}.azurewebsites.net/swagger-ui/index.html"
