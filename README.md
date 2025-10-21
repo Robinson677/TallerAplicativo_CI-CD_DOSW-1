@@ -132,13 +132,28 @@ https://account.mongodb.com/account/security/mfa/setup?redirectUri=https%3A%2F%2
 
 ---
 
+## PRUEBAS DE JACOCO:
+
+Pruebas en general de cotroller y service:
+
+![alt text](docs/imagenes/jacoco.png)
+
+Covertura Servicio RecipeServiceImpl:
+
+![alt text](docs/imagenes/jacoco1.png)
+
+Covertura Controller RecipeController:
+
+![alt text](docs/imagenes/jacoco2.png)
+
+---
+
 ## PRUEBAS DE SWAGGER:
 
 [Ver Pruebas en videos de Swagger en (PDF)](docs/pdf/pruebasEndpointsRecipe.pdf)
 
 ---
 
----
 
 ## Configuración de Azure y GitActions CI/CD
 
