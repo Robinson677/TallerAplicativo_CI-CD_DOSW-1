@@ -11,6 +11,8 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }}
 
     steps:
       - name: Checkout repository
@@ -20,7 +22,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'   
+          java-version: '17'
           cache: maven
 
       - name: Cache Maven local repository
@@ -33,3 +35,20 @@ jobs:
 
       - name: Build and run tests
         run: mvn -B -U -DskipTests=false verify
+
+      - name: Show surefire report files
+        if: failure() || success()
+        run: |
+          ls -la target/surefire-reports || true
+          for f in target/surefire-reports/*.txt; do
+            echo "===== $f ====="
+            sed -n '1,400p' "$f" || true
+            echo "===== end $f ====="
+          done
+
+      - name: Upload surefire-reports as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
