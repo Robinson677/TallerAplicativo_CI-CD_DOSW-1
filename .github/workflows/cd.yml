@@ -39,4 +39,4 @@ jobs:
 
       - name: Show deployed URL
         run: |
-          echo "App deployed at: https://${{ secrets.AZURE_WEBAPP_NAME }}.azurewebsites.net/swagger-ui/index.html"
+          echo "App deployed at: https://mi-master-cheff-api-gwcefggbgpgua6hd.brazilsouth-01.azurewebsites.net/login"
